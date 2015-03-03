@@ -19,7 +19,7 @@ object GitLineHistory {
       }
   }
 
-  val input = parser.parameter[File]("file", "File to produce git history for.", optional = false) {
+  val file = parser.parameter[File]("file", "File to produce git history for.", optional = false) {
     (s, opt) =>
       val file = new File(s)
       if (!file.exists) parser.usage(s"""Input file "$s" does not exist.""")
@@ -30,8 +30,8 @@ object GitLineHistory {
     try {
       parser.parse(args)
       val scmToUse = scm.value.getOrElse(new GitScm)
-      val file = input.value.getOrElse(throw new Exception("File not parsed correctly."))
-      val result = scmToUse.historyForFile(file)
+      val inputFile = file.value.getOrElse(throw new Exception("File not parsed correctly."))
+      val result = scmToUse.historyForFile(inputFile)
       println(result)
     } catch {
       case e: ArgotUsageException => println(e.message)
