@@ -11,3 +11,5 @@ libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test"
 libraryDependencies += "org.jbehave" % "jbehave-core" % "3.9.5"
 
 libraryDependencies += "org.jbehave" % "jbehave-scala" % "3.9.5"
+
+libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19"
