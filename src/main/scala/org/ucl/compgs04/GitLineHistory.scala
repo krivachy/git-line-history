@@ -28,7 +28,7 @@ object GitLineHistory {
   }
 
   def main(args: Array[String]): Unit = {
-    val output = process(args)
+    println(process(args))
   }
 
   def process(args: Array[String]): CommandLineOutput = {
@@ -38,6 +38,6 @@ object GitLineHistory {
       val inputFile = file.value.getOrElse(throw new Exception("File not parsed correctly."))
       val result = scmToUse.historyForFile(inputFile)
 
-      return output.processToOutput(result)
+      output.processToOutput(result)
   }
 }
