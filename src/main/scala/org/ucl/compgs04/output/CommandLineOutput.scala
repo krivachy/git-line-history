@@ -8,7 +8,6 @@ object CommandLineOutput extends Output {
    * @param fileHistory - the result
    */
   override def processToOutput(fileHistory: FileLineHistory): Unit = {
-    println("File history for the following file: "+fileHistory.fileName)
     val lineHis = new StringBuilder
     fileHistory.lineHistory.foreach{
       line =>
