@@ -1,6 +1,6 @@
 package org.ucl.compgs04
 
-import java.io.File
+import java.io.{FileNotFoundException, File}
 import _root_.org.clapper.argot.{ArgotParser, ArgotUsageException}
 import _root_.org.ucl.compgs04.scm.git.GitScm
 import org.ucl.compgs04.output.CommandLineOutput
@@ -28,7 +28,11 @@ object GitLineHistory {
   }
 
   def main(args: Array[String]): Unit = {
-    println(process(args))
+    try {
+      println(process(args))
+    } catch {
+      case e: ArgotUsageException => println(e.message)
+    }
   }
 
   def process(args: Array[String]): CommandLineOutput = {
