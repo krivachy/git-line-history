@@ -1,11 +1,14 @@
 package org.ucl.compgs04.scm.git
 
 import org.scalatest.FlatSpec
+import org.ucl.compgs04.GitLineHistory
 
 
 class GitScmTest extends FlatSpec {
   val scm = new GitScm
   "Git Scm" should "run diff correctly" in {
+    val fileName = Array("file_name") // TODO add the actual file name
+
     // TODO hard-code revision short hashes
     val revision1 = "short_hash_1"
     val revision2 = "short_hash_2"
@@ -32,7 +35,7 @@ class GitScmTest extends FlatSpec {
 
     val commandLineOutput = output.mkString("\n")
 
-    val actualOutput = ??? // TODO call function once implemented
+    val actualOutput = GitLineHistory.process(fileName)
     assert(actualOutput == commandLineOutput)
   }
 }

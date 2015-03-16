@@ -7,5 +7,5 @@ class CommandLineOutput extends Output {
    * Takes a file history and outputs it to wherever (command line/file/etc.)
    * @param fileHistory - the result
    */
-  override def processToOutput(fileHistory: FileLineHistory): Unit = ??? // TODO: Implement for expected output
+  override def processToOutput(fileHistory: FileLineHistory): CommandLineOutput = ??? // TODO: Implement for expected output
 }

@@ -27,18 +27,17 @@ object GitLineHistory {
       file
   }
 
-  // Output hardcoded to command line for now
-  val output = new CommandLineOutput
+  def main(args: Array[String]): Unit = {
+    val output = process(args)
+  }
 
-  def main(args: Array[String]) {
-    try {
+  def process(args: Array[String]): CommandLineOutput = {
+      val output = new CommandLineOutput
       parser.parse(args)
       val scmToUse = scm.value.getOrElse(new GitScm)
       val inputFile = file.value.getOrElse(throw new Exception("File not parsed correctly."))
       val result = scmToUse.historyForFile(inputFile)
-      output.processToOutput(result)
-    } catch {
-      case e: ArgotUsageException => println(e.message)
-    }
+
+      return output.processToOutput(result)
   }
 }
