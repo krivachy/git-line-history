@@ -16,5 +16,5 @@ object CommandLineOutput extends Output {
         lineHis.append(System.getProperty("line.separator"))
     }
     print(lineHis)
-  } // TODO: Implement for expected output
+  }
 }
