@@ -35,7 +35,7 @@ object GitLineHistory {
     }
   }
 
-  def process(args: Array[String]): CommandLineOutput = {
+  def process(args: Array[String]): Unit = {
       val output = new CommandLineOutput
       parser.parse(args)
       val scmToUse = scm.value.getOrElse(new GitScm)
