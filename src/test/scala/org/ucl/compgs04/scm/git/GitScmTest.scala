@@ -9,7 +9,6 @@ import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.ucl.compgs04.model.ShortHash
 import java.util.zip.ZipFile
-import collection.JavaConverters._
 
 
 class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
