@@ -15,12 +15,11 @@ class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
   "Git Scm" should "run diff correctly" in {
     val fileName = Seq("file_name") // TODO add the actual file name
 
-    // TODO hard-code revision short hashes
-    val revision1 = "short_hash_1"
-    val revision2 = "short_hash_2"
-    val revision3 = "short_hash_3"
-    val revision4 = "short_hash_4"
-    val revision5 = "short_hash_5"
+    val revision1 = ShortHash("4ea87e456809b26dbf532e76396fbe1741b2e7d4")
+    val revision2 = ShortHash("d6d5ce171c99796738c60c97b12c9c3008a903c0")
+    val revision3 = ShortHash("8be8a10bd84a2cd6ceb97c6b037c81aba7782bd4")
+    val revision4 = ShortHash("1b8062f7e37bd4ef704e01de3d6cce290aeda815")
+    val revision5 = ShortHash("3a889f11eb08ea765b7bb85485ed4c6c82509e79")
 
     val output = Seq(
       s"$revision1 $revision4: 1 changed",
@@ -45,6 +44,7 @@ class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
     val actualOutput = GitLineHistory.process(fileName.toArray)
     assert(actualOutput == commandLineOutput)
   }
+
   it should "identify the diffs correctly" in {
     val hashA = "abc"
     val hashB = "def"
