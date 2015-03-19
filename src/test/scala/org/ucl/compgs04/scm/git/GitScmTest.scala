@@ -1,11 +1,15 @@
 package org.ucl.compgs04.scm.git
 
+import java.io.{InputStreamReader, BufferedReader, InputStream, File}
+
 import org.scalatest.FlatSpec
 import org.ucl.compgs04.GitLineHistory
 import org.scalatest.{Matchers, FlatSpec}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.ucl.compgs04.model.ShortHash
+import java.util.zip.ZipFile
+import collection.JavaConverters._
 
 
 class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
@@ -13,6 +17,14 @@ class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
   val scm = new GitScm(mockOperations)
 
   "Git Scm" should "run diff correctly" in {
+    val rootZip = new ZipFile("src/test/resources/repositories/compgs04-example-repo.zip")
+    val list = rootZip.entries()
+
+    // TODO store files in repository locally to use them (delete after programme has terminated)
+    while(list.hasMoreElements) {
+      println(list.nextElement())
+    }
+
     val fileName = Seq("file_name") // TODO add the actual file name
 
     val revision1 = ShortHash("4ea87e456809b26dbf532e76396fbe1741b2e7d4")
