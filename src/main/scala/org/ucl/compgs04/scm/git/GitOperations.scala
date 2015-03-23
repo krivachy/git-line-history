@@ -11,6 +11,6 @@ trait GitOperations {
 
 object RealGitOperations extends GitOperations {
   override def gitLog(fileName: String): String = Seq("git", "log", fileName).!!
-  override def gitDiff(commitHashA: String, commitHashB: String, fileName: String): String = Seq("git", "diff", commitHashA, commitHashB, "--", fileName).!!
+  override def gitDiff(commitHashA: String, commitHashB: String, fileName: String): String = Seq("git", "diff", "--unified=0", commitHashA, commitHashB, "--", fileName).!!
   override def readFile(fileName: String): Seq[String] = Source.fromFile(fileName).getLines().toSeq
 }
