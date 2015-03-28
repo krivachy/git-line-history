@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, FlatSpec}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.ucl.compgs04.model.ShortHash
-import java.util.zip.ZipFile
+import java.util.zip.{ZipEntry, ZipFile}
 
 
 class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
@@ -16,21 +16,24 @@ class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
   val scm = new GitScm(mockOperations)
 
   "Git Scm" should "run diff correctly" in {
+    /* TODO delete if tests pass with folder instead of zip file
     val rootZip = new ZipFile("src/test/resources/repositories/compgs04-example-repo.zip")
-    val list = rootZip.entries()
+    val file = rootZip.getEntry("compgs04-example-repo/compgs04-example.txt")
+    val inputStream = rootZip.getInputStream(file)
+    val reader: BufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
+    var data = reader.readLine()
+    while(data != null) {
+      println(data)
+      data = reader.readLine()
+    }*/
 
-    // TODO store files in repository locally to use them (delete after programme has terminated)
-    while(list.hasMoreElements) {
-      println(list.nextElement())
-    }
+    val fileName = Seq("src/test/resources/repositories/compgs04-example-repo/compgs04-example.txt") // TODO add the actual file name
 
-    val fileName = Seq("file_name") // TODO add the actual file name
-
-    val revision1 = ShortHash("4ea87e456809b26dbf532e76396fbe1741b2e7d4")
-    val revision2 = ShortHash("d6d5ce171c99796738c60c97b12c9c3008a903c0")
-    val revision3 = ShortHash("8be8a10bd84a2cd6ceb97c6b037c81aba7782bd4")
-    val revision4 = ShortHash("1b8062f7e37bd4ef704e01de3d6cce290aeda815")
-    val revision5 = ShortHash("3a889f11eb08ea765b7bb85485ed4c6c82509e79")
+    val revision1 = ShortHash("4ea87e456809b26dbf532e76396fbe1741b2e7d4").getShort()
+    val revision2 = ShortHash("d6d5ce171c99796738c60c97b12c9c3008a903c0").getShort()
+    val revision3 = ShortHash("8be8a10bd84a2cd6ceb97c6b037c81aba7782bd4").getShort()
+    val revision4 = ShortHash("1b8062f7e37bd4ef704e01de3d6cce290aeda815").getShort()
+    val revision5 = ShortHash("3a889f11eb08ea765b7bb85485ed4c6c82509e79").getShort()
 
     val output = Seq(
       s"$revision1 $revision4: 1 changed",
