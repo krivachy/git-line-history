@@ -4,6 +4,7 @@ import java.io.File
 
 import scala.io.Source
 import scala.sys.process._
+import scala.util.Try
 
 trait GitOperations {
   def gitLog(fileName: String): String
@@ -11,6 +12,7 @@ trait GitOperations {
   def gitWorkingCopyDiff(fileName: String): String
   def gitShow(commitHash: String, fileName: String): String
   def readFile(fileName: String): Seq[String]
+  def gitStatus(fileName: String): Try[String]
 }
 
 object RealGitOperations extends GitOperations {
@@ -23,4 +25,5 @@ object RealGitOperations extends GitOperations {
   override def gitWorkingCopyDiff(fileName: String): String = exec(fileName, Seq("git", "diff", "--", fileName))
   override def gitShow(commitHash: String, fileName: String): String = exec(fileName, Seq("git", "show", commitHash, "--oneline", "--", fileName))
   override def readFile(fileName: String): Seq[String] = Source.fromFile(fileName).getLines().toSeq
+  override def gitStatus(fileName: String): Try[String] = Try(exec(fileName, Seq("git", "status", fileName)))
 }

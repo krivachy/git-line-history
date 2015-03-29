@@ -15,6 +15,8 @@ class GitScm(gitOperations: GitOperations) extends Scm {
   private val diffParser = DiffParser
 
   override def historyForFile(filePath: String): FileLineHistory = {
+    if(gitOperations.gitStatus(filePath).isFailure) throw new Exception(s"File is not located in Git repository: $filePath")
+
     val linesInFinalFile = gitOperations.readFile(filePath)
     val hashHistory = commitHistory(filePath)
 

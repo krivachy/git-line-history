@@ -33,6 +33,7 @@ object GitLineHistory {
       process(args)
     } catch {
       case e: ArgotUsageException => println(e.message)
+      case e: Exception => println(e.getMessage)
     }
   }
 
