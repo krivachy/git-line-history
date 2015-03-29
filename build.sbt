@@ -14,6 +14,6 @@ libraryDependencies += "org.jbehave" % "jbehave-scala" % "3.9.5"
 
 libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19"
 
-libraryDependencies += "com.googlecode.java-diff-utils" % "diffutils" % "1.2.1"
-
 libraryDependencies += "org.xeustechnologies" % "jtar" % "1.1"
+
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
