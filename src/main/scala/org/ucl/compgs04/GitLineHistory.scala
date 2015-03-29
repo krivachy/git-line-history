@@ -30,7 +30,7 @@ object GitLineHistory {
 
   def main(args: Array[String]): Unit = {
     try {
-      println(process(args))
+      process(args)
     } catch {
       case e: ArgotUsageException => println(e.message)
     }
