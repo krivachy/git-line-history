@@ -17,3 +17,5 @@ libraryDependencies += "org.mockito" % "mockito-all" % "1.10.19"
 libraryDependencies += "org.xeustechnologies" % "jtar" % "1.1"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
+
+libraryDependencies += "commons-io" % "commons-io" % "2.4"

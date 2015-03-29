@@ -2,7 +2,7 @@ package org.ucl.compgs04.output
 
 import org.ucl.compgs04.model.FileLineHistory
 
-object CommandLineOutput extends Output {
+class CommandLineOutput(outputter: (String) => Unit) extends Output {
 
   private val lineSeparator = System.getProperty("line.separator")
   /**
@@ -20,6 +20,6 @@ object CommandLineOutput extends Output {
           lineHis.append(lineSeparator)
         }
     }
-    print(lineHis)
+    outputter(lineHis.toString)
   }
 }

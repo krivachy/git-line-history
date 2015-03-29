@@ -9,8 +9,19 @@ trait DiffParsingLogic extends RegexParsers {
   protected val lineEnd = "\r?\n".r
 
   protected val headerLine1 = """diff --git .+""".r <~ lineEnd
-  protected val headerLine2a = """new file mode .+""".r <~ lineEnd
-  protected val headerLine2b = """index .+""".r <~ lineEnd
+
+  private val startOfExtendedHeaderLines = Seq(
+    "mode ",
+    "deleted file mode",
+    "new file mode",
+    "index "
+  ) //0-3
+
+  protected val e = startOfExtendedHeaderLines.map(s => ((s + ".+").r <~ lineEnd).?)
+  // Need this to force the type system to be correct
+  /// ~ e(4) ~ e(5) ~ e(6) ~ e(7) ~ e(8) ~ e(9) ~ e(10)
+  protected val extendedHeaderLines = e(0) ~ e(1) ~ e(2) ~ e(3) ^^ identity
+
   protected val headerLine3 = """--- .+""".r <~ lineEnd
   protected val headerLine4 = """\+\+\+ .+""".r <~ lineEnd
 
@@ -20,9 +31,7 @@ trait DiffParsingLogic extends RegexParsers {
     case _ ~ oStart ~ _ ~ oCount ~ _ ~ rStart ~ _ ~ rCount ~ _ => (oStart, rStart)
   }
 
-  protected def headerLines = headerLine1 ~ headerLine2a.? ~ headerLine2b ~ headerLine3 ~ headerLine4 ^^ {
-    case h1 ~ h2a ~ h2b ~ h3 ~ h4 => Seq(h1, h2a, h2b, h3, h4)
-  }
+  protected def headerLines = headerLine1 ~ extendedHeaderLines ~ headerLine3 ~ headerLine4 ^^ identity
 
   protected def chunkHeader = headerLines ~> chunkStart ^^ identity
 

@@ -1,33 +1,32 @@
 package org.ucl.compgs04.scm.git
 
-import java.io.{InputStreamReader, BufferedReader, InputStream, File}
+import java.nio.file.{Files, Paths}
 
-import org.scalatest.FlatSpec
-import org.ucl.compgs04.GitLineHistory
-import org.scalatest.{Matchers, FlatSpec}
+import org.apache.commons.io.FileUtils
 import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
+import org.scalatest.{FlatSpec, Matchers}
 import org.ucl.compgs04.model.ShortHash
-import java.util.zip.{ZipEntry, ZipFile}
+import org.ucl.compgs04.output.CommandLineOutput
+import org.ucl.compgs04.util.UnzipUtility
 
 
 class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
+
   val mockOperations = mock[GitOperations]
   val scm = new GitScm(mockOperations)
 
   "Git Scm" should "run diff correctly" in {
-    /* TODO delete if tests pass with folder instead of zip file
-    val rootZip = new ZipFile("src/test/resources/repositories/compgs04-example-repo.zip")
-    val file = rootZip.getEntry("compgs04-example-repo/compgs04-example.txt")
-    val inputStream = rootZip.getInputStream(file)
-    val reader: BufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
-    var data = reader.readLine()
-    while(data != null) {
-      println(data)
-      data = reader.readLine()
-    }*/
 
-    val fileName = Seq("src/test/resources/repositories/compgs04-example-repo/compgs04-example.txt") // TODO add the actual file name
+    val repoLocations = Paths.get("src/test/resources/repositories/")
+    val extractedDirLocation = repoLocations.resolve("compgs04-example-repo")
+    if(Files.exists(extractedDirLocation)) {
+      FileUtils.deleteDirectory(extractedDirLocation.toFile)
+    }
+    val fullZipPath = repoLocations.resolve("compgs04-example-repo.zip").toFile.getAbsolutePath
+
+    UnzipUtility.unzip(fullZipPath, repoLocations.toFile.getAbsolutePath)
+
+    val fileName = repoLocations.resolve("compgs04-example-repo").resolve("compgs04-example.txt").toFile.getAbsolutePath
 
     val revision1 = ShortHash("4ea87e456809b26dbf532e76396fbe1741b2e7d4").getShort()
     val revision2 = ShortHash("d6d5ce171c99796738c60c97b12c9c3008a903c0").getShort()
@@ -53,76 +52,15 @@ class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
       s"$revision2: 11"
     )
 
-    val commandLineOutput = output.mkString("\n")
+    val expectedOutput = output.mkString(System.getProperty("line.separator"))
 
-    val actualOutput = GitLineHistory.process(fileName.toArray)
-    assert(actualOutput == commandLineOutput)
-  }
+    val result = new GitScm(RealGitOperations).historyForFile(fileName)
 
-  it should "identify the diffs correctly" in {
-    val hashA = "abc"
-    val hashB = "def"
-    val fileName = "file"
-    val diffResult = """diff --git a/Dockerfile b/Dockerfile
-                       |index 87da1bd..e40d7db 100644
-                       |--- a/Dockerfile
-                       |+++ b/Dockerfile
-                       |@@ -1,7 +1,3 @@
-                       |-asdf
-                       |-asfsdgsdg
-                       |-dsagjldsghl
-                       |-asdfj;ladsf
-                       | FROM node2
-                       | MAINTAINER rc@inocr8.co
-                       |""".stripMargin
-    val logResult = """commit 1716c35fad8757a347a77b7fbd45f90f8c9a247e
-                      |Author: Akos Krivachy <ak@inocr8.co>
-                      |Date:   Mon Mar 2 14:35:33 2015 +0000
-                      |
-                      |    change1
-                      |""".stripMargin
-    val file = """asdf
-                 |asfsdgsdg
-                 |dsagjldsghl
-                 |asdfj;ladsf
-                 |FROM node2
-                 |MAINTAINER rc@inocr8.co
-                 |
-                 |WORKDIR /src
-                 |
-                 |COPY zephyrguard.py /src/zephyrguard.py
-                 |
-                 |# replace this with your application's default port
-                 |EXPOSE 1337
-                 |
-                 |ENV NODE_ENV production
-                 |ENV ZEPHYR_LOG_FILES_ENABLED true
-                 |ENV ZEPHYR_LOG_INFO_FILE /zephyr-info.log
-                 |ENV ZEPHYR_LOG_DEBUG_FILE /zephyr-debug.log
-                 |ENV ZEPHYR_LOG_ERROR_FILE /zephyr-error.log
-                 |
-                 |RUN apt-get update && apt-get -y install supervisor
-                 |COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-                 |
-                 |ADD sails/ /src
-                 |
-                 |# install your application's dependencies
-                 |RUN npm install
-                 |
-                 |# log.io
-                 |RUN npm install -g log.io --user "root"
-                 |ADD harvester.conf /root/.log.io/harvester.conf
-                 |
-                 |CMD ["/usr/bin/supervisord"]
-                 |""".stripMargin.split('\n')
+    // Mutable: we will write into this variable later
+    var consoleOutput = ""
+    new CommandLineOutput(s => { consoleOutput = s }).processToOutput(result)
 
-    when(mockOperations.gitDiff(hashA, hashB, fileName)).thenReturn(diffResult)
-    when(mockOperations.gitLog(fileName)).thenReturn(logResult)
-    when(mockOperations.readFile(fileName)).thenReturn(file)
-    val result = scm.historyForFile(fileName)
-    result.lineHistory should have size file.length
-    result.lineHistory.map(_.originalLine.line) should contain theSameElementsAs file
-    result.lineHistory.flatMap(_.history).distinct should contain only ShortHash("1716c35fad8757a347a77b7fbd45f90f8c9a247e")
+    assert(consoleOutput.trim == expectedOutput)
   }
 
 }

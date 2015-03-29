@@ -37,7 +37,7 @@ object GitLineHistory {
   }
 
   def process(args: Array[String]): Unit = {
-      val output = CommandLineOutput
+      val output = new CommandLineOutput(println)
       parser.parse(args)
       val scmToUse = scm.value.getOrElse(new GitScm(RealGitOperations))
       val inputFile = file.value.getOrElse(throw new Exception("File not parsed correctly."))

@@ -13,6 +13,6 @@ class CommandLineOutputTest extends FlatSpec {
       LineHistory(Seq(ShortHash("Alex"), ShortHash("Akos"), ShortHash("Sara")), Line("Second Line")),
       LineHistory(Seq(ShortHash("Alex"), ShortHash("Akos"), ShortHash("Sara")), Line("Third Line"))
     ))
-    CommandLineOutput.processToOutput(test)
+    new CommandLineOutput(println).processToOutput(test)
   }
 }
