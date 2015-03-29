@@ -122,10 +122,4 @@ class GitScmTest extends FlatSpec with MockitoSugar with Matchers {
     result.lineHistory.flatMap(_.history).distinct should contain only ShortHash("1716c35fad8757a347a77b7fbd45f90f8c9a247e")
   }
 
-  it should "test my real local repo" in {
-    val realScm = new GitScm(RealGitOperations)
-
-    val history = realScm.historyForFile("C:\\dev\\zephyr\\backend\\Dockerfile")
-  }
-
 }
